@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .login-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container login-container">
+    <h2 class="mb-4 text-center">Login</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="loginEmail">Email:</label>
+        <input type="email" class="form-control" id="loginEmail" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password:</label>
+        <input type="password" class="form-control" id="loginPassword" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+    <div class="alert alert-danger mt-3 d-none" id="errorAlert">
+      Incorrect email or password.
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const loginForm = document.getElementById("loginForm");
+      const errorAlert = document.getElementById("errorAlert");
+
+      loginForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+
+        const existingUserData = JSON.parse(localStorage.getItem("userData")) || [];
+
+        const user = existingUserData.find(user => user.email === email && user.password === password);
+
+        if (user) {
+          errorAlert.classList.add("d-none"); // Hide the error alert if shown before
+
+          // Redirect to index.html upon successful login
+          window.location.href = "index.html";
+        } else {
+          errorAlert.classList.remove("d-none");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

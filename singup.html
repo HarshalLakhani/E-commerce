@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .signup-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container signup-container">
+    <h2 class="mb-4 text-center">Sign Up</h2>
+    <form id="signupForm">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" id="password" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="tel" class="form-control" id="phone" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+    </form>
+    <div class="alert alert-danger mt-3 d-none" id="errorAlert">
+      An account with this <span id="errorType"></span> already exists.
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const signupForm = document.getElementById("signupForm");
+      const errorAlert = document.getElementById("errorAlert");
+      const errorType = document.getElementById("errorType");
+
+      signupForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const phone = document.getElementById("phone").value;
+
+        const existingUserData = JSON.parse(localStorage.getItem("userData")) || [];
+
+        const emailExists = existingUserData.some(user => user.email === email);
+        const phoneExists = existingUserData.some(user => user.phone === phone);
+
+        if (emailExists) {
+          errorType.textContent = "email";
+          errorAlert.classList.remove("d-none");
+        } else if (phoneExists) {
+          errorType.textContent = "phone number";
+          errorAlert.classList.remove("d-none");
+        } else {
+          errorAlert.classList.add("d-none"); // Hide the error alert if it was shown before
+          const password = document.getElementById("password").value;
+
+          const userData = {
+            email: email,
+            password: password,
+            phone: phone
+          };
+
+          existingUserData.push(userData);
+          localStorage.setItem("userData", JSON.stringify(existingUserData));
+
+          // Redirect to index.html upon successful sign-up
+          window.location.href = "index.html";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

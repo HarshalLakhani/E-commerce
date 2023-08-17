@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .cart-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 50px;
+    }
+    .item-list {
+      list-style: none;
+      padding: 0;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    .item img {
+      max-width: 80px;
+      max-height: 80px;
+    }
+    .total {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container cart-container">
+    <h2 class="mb-4 text-center">Your Cart</h2>
+    <ul class="item-list">
+      <!-- Items will be added here dynamically -->
+    </ul>
+    <p class="total">Total: $0</p>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const cartContainer = document.querySelector(".cart-container");
+      const itemList = cartContainer.querySelector(".item-list");
+      const totalElement = cartContainer.querySelector(".total");
+
+      // Store the cart items and total
+      let cartItems = [];
+      let cartTotal = 0;
+
+      // Function to add an item to the cart
+      function addToCart(itemName, itemPrice, itemImage) {
+        cartItems.push({ name: itemName, price: itemPrice, image: itemImage, quantity: 1 });
+        cartTotal += itemPrice;
+
+        updateCartUI();
+      }
+
+      // Function to update the cart UI
+      function updateCartUI() {
+        itemList.innerHTML = "";
+        cartItems.forEach(item => {
+          const itemElement = document.createElement("li");
+          itemElement.className = "item";
+          itemElement.innerHTML = `
+            <div>
+              <img src="${item.image}" alt="${item.name}">
+              <span>${item.name}</span>
+            </div>
+            <div>
+              <input type="number" min="1" value="${item.quantity}" onchange="updateQuantity(${cartItems.indexOf(item)}, this.value)">
+              <button class="btn btn-danger btn-sm" onclick="removeItem(${cartItems.indexOf(item)})">Remove</button>
+            </div>
+            <span>$${(item.price * item.quantity).toFixed(2)}</span>
+          `;
+
+          itemList.appendChild(itemElement);
+        });
+
+        totalElement.textContent = `Total: $${cartTotal.toFixed(2)}`;
+      }
+
+      // Function to remove an item from the cart
+      function removeItem(index) {
+        const itemToRemove = cartItems[index];
+        cartTotal -= itemToRemove.price * itemToRemove.quantity;
+        cartItems.splice(index, 1);
+
+        updateCartUI();
+      }
+
+      // Function to update the quantity of an item
+      function updateQuantity(index, quantity) {
+        const oldQuantity = cartItems[index].quantity;
+        const price = cartItems[index].price;
+
+        cartTotal -= price * oldQuantity;
+        cartTotal += price * quantity;
+
+        cartItems[index].quantity = parseInt(quantity);
+
+        updateCartUI();
+      }
+
+      // Simulating adding items to the cart
+      addToCart("Item 1", 10, "assets/img/item1.jpg");
+      addToCart("Item 2", 20, "assets/img/item2.jpg");
+      addToCart("Item 3", 15, "assets/img/item3.jpg");
+    });
+  </script>
+</body>
+</html>

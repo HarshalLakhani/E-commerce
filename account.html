@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .account-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container account-container">
+    <h2 class="mb-4 text-center">Account Page</h2>
+    <p>Welcome to your account! You can manage your account here.</p>
+    <button id="logoutButton" class="btn btn-danger btn-block">Log Out</button>
+    <hr>
+    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+    <p>Already have an account? <a href="login.html">Log In</a></p>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const logoutButton = document.getElementById("logoutButton");
+
+      logoutButton.addEventListener("click", function() {
+        // Clear any stored user session or authentication information
+        // Redirect to login.html after logging out
+        localStorage.removeItem("currentUser");
+        window.location.href = "login.html";
+      });
+    });
+  </script>
+</body>
+</html>
