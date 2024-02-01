@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Display</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyAEn7DeBgIxp6mdaPjXqj5st5giBpDkOF" crossorigin="anonymous">
+  <style>
+    .product-card {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <%- include("nav")%>
+  <div class="container mt-5">
+    <div class="row" id="box"></div>
+  </div>
+
+  <script>
+    fetch("/product/products")
+      .then((res) => res.json())
+      .then((data) => {
+        display(data);
+      });
+
+    const display = (data) => {
+      const box = document.getElementById("box");
+      box.innerHTML = "";
+
+      data.forEach((ele) => {
+        let img = document.createElement("img");
+        img.src = ele.img;
+        img.classList.add("img-fluid", "rounded-top"); // Make the image responsive and rounded with Bootstrap
+
+        let title = document.createElement("h5");
+        title.classList.add("mt-3", "font-weight-bold", "text-center"); // Centered title
+        title.innerHTML = `${ele.title}`;
+
+        let des = document.createElement("p");
+        des.classList.add("mb-1", "text-center"); // Centered description
+        des.innerHTML = `${ele.des}`;
+
+        let price = document.createElement("p");
+        price.classList.add("mb-1", "text-center"); // Centered price
+        price.innerHTML = `Price: ${ele.price}`;
+
+        let btn1 = document.createElement("button");
+        btn1.classList.add("btn", "btn-primary", "mt-3", "mx-auto", "d-block");
+        btn1.innerHTML = "Add To Cart";
+        btn1.addEventListener("click", () => cart(ele._id));
+
+        const cart = (id) => {
+          fetch(`/product/cart/${id}`, {
+            method: "POST",
+            headers: { "Content-type": "application/json " },
+            body: JSON.stringify({ productID: id }),
+          })
+            .then((response) => response.json())
+            .then((data) => console.log(data));
+        };
+
+        let col = document.createElement("div");
+        col.classList.add("col-md-3", "mb-4", "product-card"); // Added margin-bottom and product-card class
+        col.append(img, title, des, price, btn1);
+        box.append(col);
+      });
+    };
+
+    fetch("/product/all")
+      .then((res) => res.json())
+      .then((data) => {
+        display(data);
+      });
+  </script>
+</body>
+</html>
